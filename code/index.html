@@ -1,0 +1,116 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Weather App</title>
+    <!-- Link CSS Style sheet -->
+    <link rel="stylesheet" href="style.css">
+
+    <!-- Font Awesome CDN -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.2/css/all.min.css">
+    <!--  Google Font  -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Poppins&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="../code/script.js">
+
+</head>
+<body>
+    <div class="container">
+        <div class="search">
+            <input id="userInput" type="text" spellcheck="false" placeholder="Enter Your Location">
+            <i class="fa-solid fa-magnifying-glass" id="searchbtn"> Search</i>
+        </div>
+        <p class="error">*Enter Correct Location</p>
+        
+        <div class="weatherSection"> 
+            <div class="herosection">
+                <img id="weatherIcon" src="../Aseets/images/clouds.png" alt="">
+                <div class="hreodetails">
+                    <h1 class="temp">30°C</h1>
+                    <h2 class="condition">rain</h2>
+                </div>
+            </div>
+            <h1 class="cityName">City Name</h1>
+            <div class="moredetailscontainer">
+                <div class="humidity">
+                    <img src="../Aseets/images/humidity.png" alt="">
+                     <div class="humidityContent">
+                        <p id="humidityEle">30%</p>
+                        <p>Humidity</p>
+                     </div>
+                </div>
+                <div class="speed">
+                    <img src="../Aseets/images/wind.png" alt="">
+                    <div class="speedContent">
+                        <p id="windSpeedEle">30Km/h</p>
+                        <p>Wind Speed</p>
+                    </div>
+                </div>
+               </div>
+        </div>
+
+    </div>
+
+  <script>
+
+     const userInput=document.querySelector("#userInput");
+     const userInputBtn=document.querySelector("#searchbtn");
+     const weatherIcon=document.querySelector("#weatherIcon");
+
+     const apiKeys="db94ca68448f78f3c86568f0647522a9"
+     const apiURL1="https://api.openweathermap.org/data/2.5/weather?q="
+     const apiURL2="&appid=db94ca68448f78f3c86568f0647522a9&units=metric"
+
+     async function checkWeather(location){
+        const response= await fetch(apiURL1+location+apiURL2);
+        const data= await response.json();
+
+        if(response.status==404){
+            document.querySelector(".error").style.display="block";
+            document.querySelector(".weatherSection").style.display="none";
+        }
+        else{
+              // select element
+        document.querySelector(".temp").innerHTML=Math.round(data.main.temp)+"°C";
+        document.querySelector(".condition").innerHTML=data.weather[0].main;
+        document.querySelector("#humidityEle").innerHTML=data.main.humidity+"%";
+        document.querySelector("#windSpeedEle").innerHTML=data.wind.speed+"Km/h";
+        document.querySelector(".cityName").innerHTML=data.name;
+
+        if(data.weather[0].main=="Clouds"){
+            weatherIcon.src="../Aseets/images/clouds.png";
+        }
+        else if(data.weather[0].main=="Rain"){
+            weatherIcon.src="../Aseets/images/rain.png";
+        }
+        else if(data.weather[0].main=="Mist"){
+            weatherIcon.src="../Aseets/images/mist.png";
+        }
+        else if(data.weather[0].main=="Drizzle"){
+            weatherIcon.src="../Aseets/images/drizzle.png";
+        }
+        else if(data.weather[0].main=="Snow"){
+            weatherIcon.src="../Aseets/images/snow.png";
+        }
+        else if(data.weather[0].main=="Clear"){
+            weatherIcon.src="../Aseets/images/clear.png";
+        }
+
+        document.querySelector(".weatherSection").style.display="block";
+        document.querySelector(".error").style.display="none";
+
+        }
+        
+
+     }
+ 
+        userInputBtn.addEventListener("click",()=>{
+        checkWeather(userInput.value);
+        })
+
+  </script>
+   
+</body>
+</html>
